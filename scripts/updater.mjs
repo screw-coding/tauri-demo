@@ -37,7 +37,7 @@ async function resolveUpdater() {
     platforms: {
       // comment out as needed
       "windows-x86_64": { signature: "", url: "" },
-      // "darwin-aarch64": { signature: "", url: "" },
+      "darwin-aarch64": { signature: "", url: "" },
       "darwin-x86_64": { signature: "", url: "" },
       "linux-x86_64": { signature: "", url: "" },
     },
