@@ -14,7 +14,6 @@
 
 todo
 
-- [ ] relase 出来的包名不太理想，希望可以带平台名称
 - [ ] github action 感觉速度偏慢, 希望找到更好的支持跨平台编译打包的 ci 方案
 
 ### 应用的更新
@@ -26,6 +25,7 @@ Tauri为MSI（Windows）、AppImage（Linux）和App bundle（macOS）发布格�
 内置的更新器有一个前面机制来保证安全更新应用。
 生成密码
 
-```
+```shell
 pnpm tauri signer generate -w ~/.tauri/tauri-demo.key
 ```
+

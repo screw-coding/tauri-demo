@@ -4,8 +4,8 @@
 use std::path::PathBuf;
 
 use tauri::{
-    AppHandle, CustomMenuItem, GlobalWindowEvent, Manager, Menu, MenuEntry, MenuItem, Submenu,
-    SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, WindowMenuEvent,
+    AppHandle, CustomMenuItem, GlobalWindowEvent, Manager, Menu, MenuEntry, MenuItem, RunEvent,
+    Submenu, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, WindowMenuEvent,
 };
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -15,7 +15,8 @@ fn greet(name: &str) -> String {
 }
 
 fn main() {
-    tauri::Builder::default()
+    let context = tauri::generate_context!();
+    let app = tauri::Builder::default()
         // 系统窗口相关事件
         .on_window_event(window_event)
         // .menu(menu)
@@ -25,8 +26,54 @@ fn main() {
         .system_tray(system_tray())
         .on_system_tray_event(system_tray_event)
         .invoke_handler(tauri::generate_handler![greet, close_splashscreen])
-        .run(tauri::generate_context!())
+        .build(context)
         .expect("error while running tauri application");
+
+    app.run(run_event);
+}
+
+fn run_event(app: &AppHandle, event: RunEvent) {
+    match event {
+        tauri::RunEvent::Updater(updater_event) => {
+            match updater_event {
+                tauri::UpdaterEvent::UpdateAvailable {
+                    body,
+                    date,
+                    version,
+                } => {
+                    println!("update available {} {:?} {}", body, date, version);
+                }
+                // Emitted when the download is about to be started.
+                tauri::UpdaterEvent::Pending => {
+                    println!("update is pending!");
+                }
+                tauri::UpdaterEvent::DownloadProgress {
+                    chunk_length,
+                    content_length,
+                } => {
+                    println!("downloaded {} of {:?}", chunk_length, content_length);
+                }
+                // Emitted when the download has finished and the update is about to be installed.
+                tauri::UpdaterEvent::Downloaded => {
+                    println!("update has been downloaded!");
+                }
+                // Emitted when the update was installed. You can then ask to restart the app.
+                tauri::UpdaterEvent::Updated => {
+                    println!("app has been updated");
+                    app.restart();
+                }
+                // Emitted when the app already has the latest version installed and an update is not needed.
+                tauri::UpdaterEvent::AlreadyUpToDate => {
+                    println!("app is already up to date");
+                }
+                // Emitted when there is an error with the updater. We suggest to listen to this event even if the default dialog is enabled.
+                tauri::UpdaterEvent::Error(error) => {
+                    println!("failed to update: {}", error);
+                }
+            }
+        }
+        _ => {}
+    }
 }
 
 #[tauri::command]
