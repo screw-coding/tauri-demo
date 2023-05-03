@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "tauri": "tauri --no-watch",
+    "tauri": "tauri",
     "updater": "node scripts/updater.mjs",
     "publish": "node scripts/publish.mjs",
     "test": "vitest",
