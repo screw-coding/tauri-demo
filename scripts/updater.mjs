@@ -102,7 +102,7 @@ async function resolveUpdater() {
   // 更新 update.json 文件
   const { data: updateRelease } = await github.rest.repos.getReleaseByTag({
     ...options,
-    tag: tag.name,
+    tag: UPDATE_TAG_NAME,
   });
 
   for (let asset of updateRelease.assets) {
