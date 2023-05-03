@@ -1,3 +1,10 @@
+## v0.0.7
+
+### Features
+
+- some feature in v0.0.7
+
+
 ## v0.0.6
 
 ### Features
